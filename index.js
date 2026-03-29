@@ -35,12 +35,12 @@ app.get('/', async (req, res) => {
   try {
     // 1️⃣ Check Redis cache first
         logger.info('first', nameKey);
-    // const cachedData = await redis_client.get(nameKey);
-    // logger.info('API endpoint / called with query: %s', nameKey);
-    // if (cachedData) {
-    //   logger.info('Data retrieved from Redis cache for %s', nameKey);
-    //   return res.json({ source: 'redis', data: JSON.parse(cachedData) });
-    // }
+    const cachedData = await redis_client.get(nameKey);
+    logger.info('API endpoint / called with query: %s', nameKey);
+    if (cachedData) {
+      logger.info('Data retrieved from Redis cache for %s', nameKey);
+      return res.json({ source: 'redis', data: JSON.parse(cachedData) });
+    }
 
     // 2️⃣ Query MySQL if not in Redis
     const [rows] = await mysql_pool.promise().query(
